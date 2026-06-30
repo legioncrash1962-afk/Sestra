@@ -1,332 +1,266 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="description" content="Трогательное письмо-посвящение для любимой сестры Анюты. Современный адаптивный сайт с анимацией и галереей фотографий.">
-  <meta name="theme-color" content="#ff4d94">
-  <meta property="og:title" content="Для Анюты ❤️">
-  <meta property="og:description" content="Письмо от брата для сестры с любовью и теплыми словами">
-  <meta property="og:type" content="website">
-  <meta property="og:image" content="https://raw.githubusercontent.com/legioncrash1962-afk/sestra/main/IMG_20260629_215950_645.jpg">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Письмо-посвящение для любимой сестры — современный сайт с эффектом 'вау' и анимациями.">
   <title>Для Анюты ❤️ — Письмо от брата</title>
-  <link rel="preconnect" href="https://raw.githubusercontent.com">
+  <meta name="theme-color" content="#ff4d94">
   <style>
     :root{
-      --bg-1: #fff0f6;
-      --bg-2: #fff7fb;
-      --accent: #ff4d94;
-      --accent-2: #e60073;
-      --muted: #6b6b6b;
-      --card-bg: rgba(255,255,255,0.7);
-      --glass: rgba(255,255,255,0.5);
-      --radius: 16px;
-      --transition: 400ms cubic-bezier(.2,.9,.3,1);
+      --bg1:#0f0710;
+      --bg2:#2b0a2b;
+      --accent:#ff4d94;
+      --accent-2:#ff9ecb;
+      --glass: rgba(255,255,255,0.06);
+      --muted:#cbb;
+      --soft:#fff6ff;
+      --radius:20px;
     }
 
-    *{box-sizing: border-box;margin:0;padding:0}
-    html,body{height:100%;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;line-height:1.45;color:#222;background:linear-gradient(135deg,var(--bg-1),var(--bg-2));-webkit-font-smoothing:antialiased;}
+    /* Reset */
+    *{box-sizing:border-box;margin:0;padding:0}
+    html,body{height:100%;font-family:Inter,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;color:var(--soft);background:linear-gradient(180deg,var(--bg1),var(--bg2));}
+    body{overflow:hidden}
 
-    /* full-viewport canvas background */
-    #bgCanvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.95}
+    /* Canvas backgrounds sit behind everything */
+    #bgCanvas, #confettiCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
 
-    .wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:28px;display:flex;flex-direction:column;min-height:100vh}
+    .stage{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:40px;display:flex;flex-direction:column;min-height:100vh;gap:24px}
 
-    header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;box-shadow:0 8px 30px rgba(230,0,115,0.18)}
-    .brand h2{font-size:18px;color:#222}
-    nav{display:flex;gap:10px}
-    .btn{padding:10px 16px;border-radius:999px;background:transparent;border:2px solid rgba(0,0,0,0.06);cursor:pointer;transition:var(--transition);font-weight:600}
-    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;border-color:transparent;box-shadow:0 10px 30px rgba(230,0,115,0.15)}
+    header{display:flex;align-items:center;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:14px}
+    .logo{width:64px;height:64px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:flex;align-items:center;justify-content:center;font-weight:800;color:#1a001a;font-size:28px;box-shadow:0 20px 60px rgba(0,0,0,0.45),0 6px 18px rgba(255,77,148,0.12)}
+    .brand h1{font-size:18px;color:var(--soft)}
+
+    nav{display:flex;gap:10px;align-items:center}
+    .btn{background:transparent;border:1px solid rgba(255,255,255,0.08);padding:10px 14px;border-radius:999px;color:var(--soft);cursor:pointer;backdrop-filter: blur(6px);transition:transform .22s ease,box-shadow .22s ease}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:#200012;box-shadow:0 12px 40px rgba(255,77,148,0.18);border:0}
     .btn:active{transform:translateY(1px)}
 
-    main.hero{display:grid;grid-template-columns:1fr 420px;gap:32px;align-items:center;margin-top:24px}
+    /* Hero */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center}
+    .card{background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));border-radius:var(--radius);padding:28px;box-shadow:0 20px 60px rgba(0,0,0,0.45);backdrop-filter: blur(6px)}
 
-    .card{background:var(--card-bg);backdrop-filter: blur(6px);border-radius:var(--radius);padding:28px;box-shadow:0 12px 40px rgba(0,0,0,0.06)}
+    .title-wrap{position:relative;overflow:visible}
+    .hero-title{font-size:clamp(34px,6vw,64px);line-height:1;letter-spacing:-1px;margin-bottom:14px;color:transparent;background:linear-gradient(90deg,var(--soft),#ffd6ef);-webkit-background-clip:text;background-clip:text;}
+    /* reveal underline */
+    .hero-sub{color:var(--muted);font-size:16px;margin-bottom:20px}
 
-    .intro h1{font-size:clamp(28px,5vw,44px);color:#2a0b2a;line-height:1.02;margin-bottom:12px}
-    .intro p.lead{color:var(--muted);font-size:16px;margin-bottom:18px}
+    /* Glass card content */
+    .letter{font-size:16px;color:rgba(255,255,255,0.92);line-height:1.8}
 
-    .cta-row{display:flex;gap:12px;flex-wrap:wrap}
-
-    /* gallery styles */
+    /* Gallery */
     .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .photo{border-radius:12px;overflow:hidden;position:relative}
-    .photo img{display:block;width:100%;height:100%;object-fit:cover;transition:transform var(--transition),filter var(--transition)}
-    .photo:focus-within img,.photo:hover img{transform:scale(1.03);filter:brightness(1.03)}
+    .photo{border-radius:14px;overflow:hidden;cursor:pointer;transform-origin:center;transition:transform .5s cubic-bezier(.2,.9,.3,1),box-shadow .2s}
+    .photo img{display:block;width:100%;height:100%;object-fit:cover}
+    .photo:hover{transform:translateY(-10px) scale(1.03);box-shadow:0 30px 80px rgba(0,0,0,0.6)}
 
-    aside.card{height:100%}
-    .meta{display:flex;flex-direction:column;gap:10px}
-    .meta small{color:var(--muted)}
+    /* Floating 3D parallax group */
+    .parallax{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:1}
 
-    footer{margin-top:auto;padding:18px 0;color:var(--muted);font-size:14px;text-align:center}
+    footer{margin-top:auto;text-align:center;color:var(--muted)}
 
-    /* modal */
-    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:linear-gradient(rgba(10,10,10,0.3),rgba(10,10,10,0.3));z-index:40;opacity:0;pointer-events:none;transition:opacity 200ms ease}
-    .modal.open{opacity:1;pointer-events:auto}
-    .modal .sheet{width:min(820px,95%);background:linear-gradient(180deg,rgba(255,255,255,0.95),rgba(255,255,255,0.92));border-radius:18px;padding:28px;box-shadow:0 30px 80px rgba(10,10,10,0.25);transform:translateY(12px);opacity:0;transition:transform 300ms var(--transition),opacity 250ms}
-    .modal.open .sheet{transform:translateY(0);opacity:1}
-    .sheet .content p{font-size:18px;color:#333}
-    .close-x{position:absolute;right:18px;top:18px;background:transparent;border:none;font-size:18px;cursor:pointer}
+    /* Modal / Lightbox */
+    .overlay{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(4,2,4,0.6);z-index:50;opacity:0;pointer-events:none;transition:opacity .25s ease}
+    .overlay.open{opacity:1;pointer-events:auto}
+    .lightbox{width:min(920px,96%);max-height:92vh;background:linear-gradient(180deg,#fff1fb,rgba(255,255,255,0.9));border-radius:18px;padding:22px;overflow:auto;color:#2b002b;box-shadow:0 30px 90px rgba(0,0,0,0.6)}
+    .close{position:absolute;right:18px;top:18px;background:transparent;border:0;font-size:20px;cursor:pointer}
 
-    /* small screens */
-    @media (max-width:900px){main.hero{grid-template-columns:1fr;}
-      .gallery{grid-template-columns:repeat(2,1fr)}
-      .logo{width:48px;height:48px}}
+    /* Letter animation (stagger) */
+    .split{display:inline-block;opacity:0;transform:translateY(30px) rotateX(20deg);transform-origin:50% 50%}
 
-    @media (max-width:480px){.gallery{grid-template-columns:1fr}}
+    /* confetti particles small */
+    .spark{position:absolute;width:6px;height:12px;background:var(--accent);opacity:0.95;border-radius:2px}
+
+    /* responsive */
+    @media (max-width:900px){.hero{grid-template-columns:1fr}.gallery{grid-template-columns:repeat(2,1fr)}.logo{width:56px;height:56px}}
+    @media (max-width:540px){.gallery{grid-template-columns:1fr}.hero-title{font-size:32px}}
 
     /* reduced motion */
-    @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+    @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}} 
 
-    /* accessibility focus */
-    :focus{outline:3px solid rgba(255,77,148,0.18);outline-offset:3px}
   </style>
 </head>
 <body>
   <canvas id="bgCanvas" aria-hidden="true"></canvas>
-  <div class="wrap">
+  <canvas id="confettiCanvas" aria-hidden="true"></canvas>
+
+  <div class="stage" id="stage">
     <header>
       <div class="brand">
         <div class="logo" aria-hidden="true">А</div>
         <div>
-          <h2>Для Анюты</h2>
-          <small style="color:var(--muted)">Письмо от брата • Любовь и забота</small>
+          <h1>Для Анюты</h1>
+          <div style="font-size:12px;color:var(--muted)">Письмо от брата • Специально</div>
         </div>
       </div>
-      <nav aria-label="Навигация">
+      <nav>
         <button class="btn" id="openBtn">Открыть письмо</button>
         <button class="btn" id="musicToggle">🎵 Включить музыку</button>
-        <button class="btn primary" id="shareBtn">Поделиться</button>
+        <button class="btn primary" id="wowBtn">Сюрприз ✨</button>
       </nav>
     </header>
 
-    <main class="hero" role="main">
-      <section class="card intro" aria-labelledby="title">
-        <h1 id="title">💖 Моей любимой сестре — Анюте</h1>
-        <p class="lead">Я сделал этот сайт, чтобы сказать важные слова. Современный, лёгкий и адаптивный — как и ты.</p>
+    <main class="hero">
+      <section class="card">
+        <div class="title-wrap">
+          <h2 class="hero-title" id="heroTitle">💖 Моей любимой сестре — Анюте</h2>
+          <p class="hero-sub">Сайт-послание с анимациями и эффектом «вау»</p>
+        </div>
 
-        <div class="cta-row">
-          <button class="btn primary" id="revealBtn">Прочитать письмо</button>
-          <button class="btn" id="galleryBtn">Посмотреть фото</button>
+        <div class="letter" id="letter">
+          Моя дорогая сестрёнка, <strong>Анюта</strong> ❤️
+          <br><br>
+          Я сделал этот сайт, чтобы сказать важные слова. Здесь всё — от души: фото, мелодия и маленькие сюрпризы.
         </div>
 
         <div style="height:14px"></div>
-
-        <div class="card" style="margin-top:18px">
-          <div class="meta">
-            <small>Советы по взаимодействию:</small>
-            <small>Нажми «Прочитать письмо» — откроется анимированное модальное окно.</small>
-            <small>Кнопка музыки управляет фоном (включение требует разрешения браузера).</small>
-          </div>
+        <div style="display:flex;gap:12px;margin-top:14px">
+          <button class="btn primary" id="readBtn">Прочитать письмо</button>
+          <button class="btn" id="photosBtn">Открыть галерею</button>
         </div>
       </section>
 
-      <aside class="card" aria-label="Галерея фотографий">
-        <h3 style="margin-bottom:10px">Галерея</h3>
+      <aside class="card" aria-label="Галерея">
+        <h3 style="margin-bottom:10px;color:var(--soft)">Галерея</h3>
         <div class="gallery" id="gallery">
-          <figure class="photo" tabindex="0">
-            <img src="https://raw.githubusercontent.com/legioncrash1962-afk/sestra/main/IMG_20260629_215950_645.jpg" alt="Портрет Анюты" loading="lazy" decoding="async">
-          </figure>
-          <figure class="photo" tabindex="0">
-            <img src="https://raw.githubusercontent.com/legioncrash1962-afk/sestra/main/IMG_20260629_220001_546.jpg" alt="Фото с сестрой вместе" loading="lazy" decoding="async">
-          </figure>
+          <figure class="photo" tabindex="0"><img src="https://raw.githubusercontent.com/legioncrash1962-afk/sestra/main/IMG_20260629_215950_645.jpg" alt="Портрет Анюты"></figure>
+          <figure class="photo" tabindex="0"><img src="https://raw.githubusercontent.com/legioncrash1962-afk/sestra/main/IMG_20260629_220001_546.jpg" alt="Фото с сестрой вместе"></figure>
         </div>
       </aside>
     </main>
 
-    <footer>
-      ❤️ Сделано с любовью специально для Анюты — современно и сердечно
-    </footer>
+    <footer>❤️ Сделано с любовью — нажми «Сюрприз», чтобы увидеть эффект ✨</footer>
   </div>
 
-  <!-- Modal: письмо -->
-  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <div class="sheet" role="document">
-      <button class="close-x" id="closeModal" aria-label="Закрыть">✕</button>
-      <h2 id="modalTitle">Письмо для Анюты</h2>
-      <div class="content" style="margin-top:12px">
-        <p>Моя дорогая сестрёнка, <strong>Анюта</strong> ❤️</p>
-        <p>Сегодня я просто хочу сказать тебе несколько слов от всего сердца. Ты не просто Аня — ты моя сестра, и я очень счастлив, что именно ты есть в моей жизни.</p>
-        <p>Спасибо тебе за все наши воспоминания, за поддержку, за улыбки и за то, что всегда остаёшься собой. Пусть в твоей жизни будет как можно больше радостных моментов.</p>
-        <p style="font-weight:700;margin-top:10px">С любовью, <br> Твой брат.</p>
-      </div>
+  <!-- Overlay Lightbox / Modal -->
+  <div class="overlay" id="overlay" aria-hidden="true">
+    <div class="lightbox" role="dialog" aria-modal="true" id="lightbox">
+      <button class="close" id="closeLight">✕</button>
+      <div id="lightContent"></div>
     </div>
   </div>
 
-  <!-- Audio -->
   <audio id="bgMusic" preload="auto">
     <source src="./MATRANG, Баста - Привет.mp3" type="audio/mpeg">
-    Ваш браузер не поддерживает аудио.
   </audio>
 
   <script>
     (function(){
       'use strict';
 
-      // Простая и оптимизированная canvas-анимация партиклов/сердец
-      const canvas = document.getElementById('bgCanvas');
+      // --- helper
+      const q = sel => document.querySelector(sel);
+      const qa = sel => Array.from(document.querySelectorAll(sel));
+
+      // --- Canvas background: smooth gradient blobs + particles (optimized)
+      const canvas = q('#bgCanvas');
       const ctx = canvas.getContext('2d');
-      let w = canvas.width = innerWidth;
-      let h = canvas.height = innerHeight;
+      let W = canvas.width = innerWidth, H = canvas.height = innerHeight;
+
+      const blobs = [];
       const particles = [];
-      const COLORS = ['#ff4d94','#ffd1e6','#ff9ecb','#ffc1df'];
-      const MAX = Math.round((w*h)/60000); // масштабируем количество частиц по размеру экрана
 
-      function resize(){
-        w = canvas.width = innerWidth;
-        h = canvas.height = innerHeight;
-      }
-      addEventListener('resize', resize);
+      function onResize(){ W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+      addEventListener('resize', onResize);
 
-      function rand(min,max){return Math.random()*(max-min)+min}
+      function rand(a,b){return Math.random()*(b-a)+a}
 
-      class Particle{
-        constructor(){
-          this.reset();
-        }
-        reset(){
-          this.x = rand(0,w);
-          this.y = rand(-h, h);
-          this.vx = rand(-0.2,0.2);
-          this.vy = rand(0.2,1.2);
-          this.size = rand(8,28);
-          this.alpha = rand(0.2,0.95);
-          this.color = COLORS[Math.floor(Math.random()*COLORS.length)];
-          this.shape = Math.random() > 0.6 ? 'heart' : 'circle';
-          this.rotation = rand(0,Math.PI*2);
-          this.spin = rand(-0.01,0.01);
-        }
-        step(){
-          this.x += this.vx;
-          this.y += this.vy;
-          this.rotation += this.spin;
-          if(this.y - this.size > h || this.x < -100 || this.x > w+100) this.reset();
-        }
-        draw(ctx){
-          ctx.save();
-          ctx.globalAlpha = this.alpha;
-          ctx.translate(this.x,this.y);
-          ctx.rotate(this.rotation);
-          if(this.shape==='circle'){
-            ctx.fillStyle = this.color;
-            ctx.beginPath();
-            ctx.arc(0,0,this.size/2,0,Math.PI*2);
-            ctx.fill();
-          } else {
-            // simple heart shape using bezier path scaled to size
-            ctx.fillStyle = this.color;
-            const s = this.size/24;
-            ctx.beginPath();
-            ctx.moveTo(0, -6*s);
-            ctx.bezierCurveTo(12*s, -20*s, 30*s, -6*s, 0, 16*s);
-            ctx.bezierCurveTo(-30*s, -6*s, -12*s, -20*s, 0, -6*s);
-            ctx.closePath();
-            ctx.fill();
-          }
-          ctx.restore();
-        }
-      }
+      // blobs: animated soft gradients behind content
+      class Blob{ constructor(){ this.reset() } reset(){ this.x = rand(0,W); this.y = rand(0,H); this.r = rand(160,420); this.vx = rand(-0.15,0.15); this.vy = rand(-0.05,0.05); this.h = rand(320,360); this.s = rand(60,90); this.l = rand(40,60);} step(){ this.x += this.vx; this.y += this.vy; if(this.x<-this.r) this.x = W+this.r; if(this.x>W+this.r) this.x = -this.r; if(this.y<-this.r) this.y = H+this.r; if(this.y>H+this.r) this.y = -this.r } draw(ctx){ const g = ctx.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r); g.addColorStop(0, `hsla(${this.h},${this.s}%,${this.l}%,0.18)`); g.addColorStop(0.5, `hsla(${(this.h+30)%360},${this.s}%,${this.l+10}%,0.08)`); g.addColorStop(1, `transparent`); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill(); }}
 
-      function ensureParticles(){
-        const target = Math.max(8, Math.min(60, MAX));
-        while(particles.length < target) particles.push(new Particle());
-        while(particles.length > target) particles.pop();
-      }
+      // small sparkle particles
+      class Particle{ constructor(){ this.reset() } reset(){ this.x=rand(0,W); this.y=rand(0,H); this.vx=rand(-0.2,0.2); this.vy=rand(-0.6,-0.2); this.size=rand(0.6,2.6); this.alpha=rand(0.05,0.35); this.color = `hsla(${rand(320,350)},90%,60%,${this.alpha})`} step(){ this.x+=this.vx; this.y+=this.vy; if(this.y<-10) this.reset(); } draw(ctx){ ctx.fillStyle=this.color; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); }}
 
-      let rafId;
-      function loop(){
-        ctx.clearRect(0,0,w,h);
-        // subtle radial gradient
-        const g = ctx.createLinearGradient(0,0,w,h);
-        g.addColorStop(0,'rgba(255,255,255,0.06)');
-        g.addColorStop(1,'rgba(255,255,255,0.02)');
-        ctx.fillStyle = g;
-        ctx.fillRect(0,0,w,h);
+      // initialize
+      for(let i=0;i<3;i++) blobs.push(new Blob());
+      for(let i=0;i<Math.max(40, Math.round((W*H)/18000)); i++) particles.push(new Particle());
 
-        for(const p of particles){
-          p.step();
-          p.draw(ctx);
-        }
-        rafId = requestAnimationFrame(loop);
-      }
-
-      // Respect prefers-reduced-motion
+      let raf;
       const reduce = window.matchMedia('(prefers-reduced-motion: reduce)');
-      if(!reduce.matches){
-        ensureParticles();
-        loop();
-      } else {
-        // hide canvas if reduced motion
-        canvas.style.display = 'none';
+      function frame(){ ctx.clearRect(0,0,W,H);
+        // dark vignette
+        const vg = ctx.createLinearGradient(0,0,W,H); vg.addColorStop(0,'rgba(0,0,0,0)'); vg.addColorStop(1,'rgba(0,0,0,0.18)'); ctx.fillStyle = vg; ctx.fillRect(0,0,W,H);
+        // blobs
+        for(const b of blobs){ b.step(); b.draw(ctx); }
+        // particles
+        for(const p of particles){ p.step(); p.draw(ctx); }
+        raf = requestAnimationFrame(frame);
       }
+      if(!reduce.matches) frame(); else canvas.style.display='none';
 
-      // Modal logic
-      const modal = document.getElementById('modal');
-      const openBtn = document.getElementById('openBtn');
-      const revealBtn = document.getElementById('revealBtn');
-      const closeModal = document.getElementById('closeModal');
+      // --- Confetti canvas for surprise
+      const conf = q('#confettiCanvas'); const cctx = conf.getContext('2d'); conf.width = innerWidth; conf.height=innerHeight; addEventListener('resize', ()=>{ conf.width = innerWidth; conf.height = innerHeight });
+      const confetti = [];
+      function spawnConfetti(x,y,n=60){ for(let i=0;i<n;i++){ confetti.push({x:x||innerWidth/2,y:y||innerHeight/3,vx:rand(-6,6),vy:rand(-12,-4),r:rand(6,12),rot:rand(0,Math.PI*2),vr:rand(-0.15,0.15),color:`hsl(${Math.floor(rand(320,360))}deg 95% 65%)`,life:rand(60,140)}) } }
+      function confettiStep(){ cctx.clearRect(0,0,conf.width,conf.height); for(let i=confetti.length-1;i>=0;i--){ const p=confetti[i]; p.vy += 0.45; p.x+=p.vx; p.y+=p.vy; p.rot+=p.vr; p.life--; cctx.save(); cctx.translate(p.x,p.y); cctx.rotate(p.rot); cctx.fillStyle=p.color; cctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*0.6); cctx.restore(); if(p.y>conf.height+60||p.life<0) confetti.splice(i,1) } requestAnimationFrame(confettiStep); }
+      confettiStep();
 
-      function openModal(){
-        modal.classList.add('open');
-        // focus trap simple
-        setTimeout(()=>document.querySelector('.sheet').focus(),200);
-      }
-      function close(){
-        modal.classList.remove('open');
-      }
-      openBtn.addEventListener('click', openModal);
-      revealBtn.addEventListener('click', openModal);
-      closeModal.addEventListener('click', close);
-      modal.addEventListener('click', (e)=>{ if(e.target===modal) close(); });
+      // --- Hero title split animation
+      function splitText(el){ const txt = el.textContent.trim(); el.innerHTML=''; const frag=document.createDocumentFragment(); txt.split('').forEach((ch,i)=>{ const span=document.createElement('span'); span.className='split'; span.textContent=ch===' ' ? '\u00A0' : ch; span.style.transition = `transform .7s cubic-bezier(.2,.9,.3,1) ${i*18}ms, opacity .55s ${i*18}ms`; frag.appendChild(span); }); el.appendChild(frag); }
+      const heroTitle = q('#heroTitle'); splitText(heroTitle);
+      // trigger entrance
+      setTimeout(()=>{ qa('.split').forEach(s=>{ s.style.opacity=1; s.style.transform='translateY(0) rotateX(0deg)'; }) },360);
 
-      // Keyboard
-      document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') close(); });
+      // Parallax: slight movement of stage based on mouse
+      const stage = q('#stage'); let mx=0,my=0; window.addEventListener('mousemove',(e)=>{ mx = (e.clientX - innerWidth/2)/innerWidth*10; my = (e.clientY - innerHeight/2)/innerHeight*10; stage.style.transform = `translate3d(${mx}px,${my}px,0)` });
 
-      // Music toggle with state update
-      const musicBtn = document.getElementById('musicToggle');
-      const bgMusic = document.getElementById('bgMusic');
-      let playing = false;
-      if(bgMusic){ bgMusic.loop = true; bgMusic.volume = 0.28 }
-      musicBtn.addEventListener('click', ()=>{
-        if(!bgMusic) return;
-        if(playing){ bgMusic.pause(); musicBtn.textContent='🎵 Включить музыку'; playing=false }
-        else { bgMusic.play().catch(()=>{ alert('Не удалось воспроизвести: нажмите воспроизведение ещё раз или проверьте доступность файла.'); }); musicBtn.textContent='🔇 Выключить музыку'; playing=true }
+      // --- Modal / lightbox
+      const overlay = q('#overlay'); const light = q('#lightbox'); const lightContent = q('#lightContent'); const closeLight = q('#closeLight'); function openLight(html){ lightContent.innerHTML = html; overlay.classList.add('open'); overlay.setAttribute('aria-hidden','false'); light.focus(); }
+      function closeAll(){ overlay.classList.remove('open'); overlay.setAttribute('aria-hidden','true'); }
+      q('#openBtn').addEventListener('click', ()=> openLight(renderLetterHTML()));
+      q('#readBtn').addEventListener('click', ()=> openLight(renderLetterHTML()));
+      q('#photosBtn').addEventListener('click', ()=> openLight(renderGalleryHTML()));
+      closeLight.addEventListener('click', closeAll);
+      overlay.addEventListener('click',(e)=>{ if(e.target===overlay) closeAll() });
+      document.addEventListener('keydown',(e)=>{ if(e.key==='Escape') closeAll(); });
+
+      function renderLetterHTML(){ return `
+        <div style="display:flex;gap:18px;align-items:flex-start">
+          <div style="flex:1">
+            <h2 style=\"margin:0 0 10px 0;\">Письмо для Анюты</h2>
+            <div style=\"font-size:16px;color:#4a003f;line-height:1.8;\">Моя дорогая сестрёнка, <strong>Анюта</strong> ❤️<br><br>Сегодня я просто хочу сказать тебе несколько слов от всего сердца. Ты не просто Аня — ты моя сестра, и я очень счастлив, что именно ты есть в моей жизни.<br><br>Спасибо тебе за все наши воспоминания, за поддержку, за улыбки и за то, что всегда остаёшься собой. Я искренне хочу, чтобы ты была счастлива, здорова и любима.<br><br><strong>С любовью, Твой брат.</strong></div>
+          </div>
+          <div style=\"width:260px;flex-shrink:0;\"><img src=\"https://raw.githubusercontent.com/legioncrash1962-afk/sestra/main/IMG_20260629_215950_645.jpg\" style=\"display:block;width:100%;border-radius:12px;\"></div>
+        </div>
+      `; }
+
+      function renderGalleryHTML(){ return `
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <img src="https://raw.githubusercontent.com/legioncrash1962-afk/sestra/main/IMG_20260629_215950_645.jpg" style="width:100%;border-radius:10px">
+          <img src="https://raw.githubusercontent.com/legioncrash1962-afk/sestra/main/IMG_20260629_220001_546.jpg" style="width:100%;border-radius:10px">
+        </div>
+      `; }
+
+      // --- Surprise button: spawn confetti + heartbeat + sound
+      const wowBtn = q('#wowBtn'); const audio = q('#bgMusic'); wowBtn.addEventListener('click', ()=>{
+        // small heartbeat pulse
+        wowBtn.animate([{transform:'scale(1)'},{transform:'scale(1.06)'},{transform:'scale(1)'}],{duration:650,easing:'cubic-bezier(.2,.9,.3,1)'});
+        // confetti center
+        spawnConfetti(innerWidth/2, innerHeight/3, 120);
+        // small pop sound (if available)
+        if(audio){ audio.currentTime=0; audio.play().catch(()=>{}); }
       });
 
-      // Share (navigator.share when available)
-      const shareBtn = document.getElementById('shareBtn');
-      shareBtn.addEventListener('click', async ()=>{
-        const shareData = {title:document.title,text:'Письмо для Анюты — от брата',url:location.href};
-        if(navigator.share){
-          try{ await navigator.share(shareData) } catch(err){ console.warn('Share cancelled',err) }
-        } else {
-          // fallback: copy url
-          try{ await navigator.clipboard.writeText(location.href); alert('Ссылка скопирована в буфер обмена') } catch(e){ alert('Скопируй ссылку вручную: '+location.href) }
-        }
+      // --- Gallery click to open full-screen
+      q('#gallery').addEventListener('click',(e)=>{ const img = e.target.closest('img'); if(!img) return; openLight(`<img src="${img.src}" style="width:100%;height:auto;border-radius:10px">`); });
+
+      // --- Music toggle
+      const musicToggle = q('#musicToggle'); let playing=false; if(audio){ audio.loop=true; audio.volume=0.28 }
+      musicToggle.addEventListener('click', ()=>{
+        if(!audio) return;
+        if(playing){ audio.pause(); musicToggle.textContent='🎵 Включить музыку'; playing=false } else { audio.play().catch(()=>{}); musicToggle.textContent='🔇 Выключить музыку'; playing=true }
       });
 
-      // Gallery lightbox (very small): open image in new window overlay
-      document.getElementById('gallery').addEventListener('click', (e)=>{
-        const img = e.target.closest('img');
-        if(!img) return;
-        const w = window.open('');
-        w.document.write('<title>'+ (img.alt||'Фото') +'</title>');
-        w.document.write('<img src="'+img.src+'" style="width:100%;height:auto;display:block;margin:0;">');
-      });
+      // cleanup and graceful stops
+      window.addEventListener('beforeunload', ()=>{ if(raf) cancelAnimationFrame(raf); if(audio) audio.pause(); });
 
-      // Basic intersection observer for subtle entrance animations
-      const io = new IntersectionObserver((entries)=>{
-        for(const en of entries){
-          if(en.isIntersecting){ en.target.style.transform='translateY(0)'; en.target.style.opacity=1; io.unobserve(en.target) }
-        }
-      },{threshold:0.12});
+      // -- accessibility: focus management
+      overlay.addEventListener('transitionend', ()=>{ if(overlay.classList.contains('open')) { light.setAttribute('tabindex','-1'); light.focus(); } });
 
-      document.querySelectorAll('.card, .photo').forEach(el=>{ el.style.opacity=0; el.style.transform='translateY(10px)'; io.observe(el) });
-
-      // Cleanup on unload
-      window.addEventListener('beforeunload', ()=>{ if(rafId) cancelAnimationFrame(rafId); if(bgMusic) bgMusic.pause(); });
+      // animate confetti for initial subtle entrance
+      setTimeout(()=>spawnConfetti(innerWidth/2, innerHeight/3, 28), 900);
 
     })();
   </script>
